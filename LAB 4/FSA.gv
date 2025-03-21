@@ -1,0 +1,12 @@
+digraph FSA {
+	rankdir=LR
+	A [label=q0 shape=circle]
+	B [label=q1 shape=circle]
+	L [label=q2 shape=doublecircle]
+	A -> A [label=b]
+	A -> B [label=a]
+	B -> A [label=b]
+	B -> L [label=a]
+	L -> A [label=b]
+	L -> L [label=a]
+}
