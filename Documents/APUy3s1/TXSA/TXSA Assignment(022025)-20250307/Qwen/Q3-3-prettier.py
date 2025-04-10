@@ -25,6 +25,14 @@ class CFGParser:
     def count_constituents(self, tree):
         return len(list(tree.subtrees()))
 
+def check_coverage(grammar, tokens):
+    """Check if all tokens are covered by the grammar."""
+    missing = [tok for tok in tokens if not grammar._lexical_index.get(tok)]
+    if missing:
+        print(f"{Fore.RED}Missing coverage for: {missing}{Style.RESET_ALL}")
+    else:
+        print(f"{Fore.GREEN}All tokens covered by grammar{Style.RESET_ALL}")
+
 def main():
     parser = argparse.ArgumentParser(
         description='Advanced CFG Parse Tree Generator (4.0 Edition)'
@@ -46,22 +54,22 @@ def main():
 
     # Define multiple grammars for comparison [[5]][[7]]
     grammars = {
-    'extended': """
-        S -> NP VP | S Conj S
-        NP -> DT AdjPhrase N | NP PP
-        AdjPhrase -> Adj | Adj AdjPhrase
-        VP -> V NP | VP PP | V ADVP | VP Conj VP  # Add VP coordination [[5]]
-        PP -> P NP
-        ADVP -> Adv
-        Conj -> 'and'
-        DT -> 'The' | 'the'
-        Adj -> 'big' | 'black' | 'white'
-        N -> 'dog' | 'cat'
-        V -> 'barked' | 'chased'
-        P -> 'at'
-        Adv -> 'away'
-    """
-}
+        'extended': """
+            S -> NP VP | S Conj S
+            NP -> DT AdjPhrase N | NP PP
+            AdjPhrase -> Adj | Adj AdjPhrase
+            VP -> V NP | VP PP | V ADVP | VP Conj VP
+            PP -> P NP
+            ADVP -> Adv
+            Conj -> 'and'
+            DT -> 'the'
+            Adj -> 'big' | 'black' | 'white'
+            N -> 'dog' | 'cat'
+            V -> 'barked' | 'chased'
+            P -> 'at'
+            Adv -> 'away'
+        """
+    }
 
     # Process each sentence with analysis
     for i, sentence in enumerate(sentences):
@@ -69,11 +77,12 @@ def main():
         print(f"Original: \"{sentence}\"")
         
         tokens = word_tokenize(sentence.lower())
-        tokens = [t for t in tokens if t not in ('.', ',', ';')]  # Existing code  # Clean punctuation [[2]]
+        tokens = [t for t in tokens if t not in ('.', ',', ';')]  # Clean punctuation [[2]]
         
         # Compare multiple grammars
         for name, grammar in grammars.items():
             cfg_parser = CFGParser(grammar)
+            check_coverage(cfg_parser.grammar, tokens)  # Check token coverage [[4]]
             trees = cfg_parser.parse_sentence(tokens)
             
             print(f"\n{Fore.YELLOW}Using {name.upper()} grammar:{Style.RESET_ALL}")
@@ -98,7 +107,7 @@ def main():
                 
             # Linguistic explanation
             print(f"\n{Fore.BLUE}Linguistic Insights:{Style.RESET_ALL}")
-            print(f"- Main constituents: {', '.join([str(n.label()) for n in tree])}")
+            print(f"- Main constituents: {', '.join([str(n.label()) for n in tree if isinstance(n, Tree)])}")
             print(f"- Deepest branch: {max(tree.subtrees(), key=lambda t: t.height())}")
 
 if __name__ == "__main__":

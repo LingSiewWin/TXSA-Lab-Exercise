@@ -8,7 +8,7 @@ nltk.download('punkt', quiet=True)
 
 def main():
     parser = argparse.ArgumentParser(description='Parse Tree Generation')
-    parser.add_argument('input_file', nargs='?', default='Data_2.txt', help='Input text file (default: Data_2.txt)')
+    parser.add_argument('input_file', nargs='?', default='Q3/Data_2.txt', help='Input text file (default: Data_2.txt)')
     args = parser.parse_args()
 
     try:
