@@ -69,7 +69,7 @@ def main():
         print(f"Original: \"{sentence}\"")
         
         tokens = word_tokenize(sentence.lower())
-        tokens = [t for t in tokens if t not in ('.', ',', ';')]  # Clean punctuation [[2]]
+        tokens = [t for t in tokens if t not in ('.', ',', ';')]  # Existing code  # Clean punctuation [[2]]
         
         # Compare multiple grammars
         for name, grammar in grammars.items():
