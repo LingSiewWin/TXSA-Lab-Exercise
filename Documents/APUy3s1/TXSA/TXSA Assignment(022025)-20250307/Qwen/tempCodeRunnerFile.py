@@ -1,55 +1,117 @@
 import sys
 import argparse
 import nltk
+from nltk import CFG, ChartParser
+from nltk.tree import Tree
 from nltk.tokenize import word_tokenize
-from nltk import ChartParser
+from colorama import Fore, Style
 
 nltk.download('punkt', quiet=True)
 
+class CFGParser:
+    def __init__(self, grammar_str):
+        self.grammar = CFG.fromstring(grammar_str)
+        self.parser = ChartParser(self.grammar)
+        
+    def parse_sentence(self, tokens):
+        return list(self.parser.parse(tokens))
+    
+    def analyze_ambiguity(self, trees):
+        return len(trees) > 1
+    
+    def calculate_tree_depth(self, tree):
+        return tree.height()
+    
+    def count_constituents(self, tree):
+        return len(list(tree.subtrees()))
+
 def main():
-    parser = argparse.ArgumentParser(description='Parse Tree Generation')
-    parser.add_argument('input_file', nargs='?', default='Data_2.txt', help='Input text file (default: Data_2.txt)')
+    parser = argparse.ArgumentParser(
+        description='Advanced CFG Parse Tree Generator (4.0 Edition)'
+    )
+    parser.add_argument('input_file', nargs='?', default='Q3/Data_2.txt',
+                       help='Input text file (default: Data_2.txt)')
     args = parser.parse_args()
 
+    # Enhanced file handling with error recovery
     try:
         with open(args.input_file, 'r') as file:
-            sentence = file.read().strip()
-            if not sentence:
-                print("Error: Input file is empty")
-                sys.exit(1)
+            sentences = [line.strip() for line in file if line.strip()]
+            if not sentences:
+                raise ValueError("Input file contains no valid sentences")
     except FileNotFoundError:
-        print(f"Error: File '{args.input_file}' not found")
-        sys.exit(1)
+        sys.exit(f"{Fore.RED}Error: File '{args.input_file}' not found{Style.RESET_ALL}")
+    except Exception as e:
+        sys.exit(f"{Fore.RED}Error: {str(e)}{Style.RESET_ALL}")
 
-    tokens = word_tokenize(sentence.replace('.', ''))  # Remove period for parsing
+    # Define multiple grammars for comparison [[5]][[7]]
+    grammars = {
+        'basic': """
+            S -> NP VP
+            NP -> DT AdjPhrase N
+            AdjPhrase -> Adj | Adj AdjPhrase
+            VP -> V NP | V PP
+            PP -> P NP
+            DT -> 'The' | 'the'
+            Adj -> 'big' | 'black' | 'white'
+            N -> 'dog' | 'cat'
+            V -> 'barked' | 'chased'
+            P -> 'at'
+        """,
+        'extended': """
+            S -> NP VP | S Conj S
+            NP -> DT AdjPhrase N | NP PP
+            AdjPhrase -> Adj | Adj AdjPhrase
+            VP -> V NP | VP PP | V ADVP
+            PP -> P NP
+            ADVP -> Adv
+            Conj -> 'and'
+            DT -> 'The' | 'the'
+            Adj -> 'big' | 'black' | 'white'
+            N -> 'dog' | 'cat'
+            V -> 'barked' | 'chased'
+            P -> 'at'
+            Adv -> 'away'
+        """
+    }
 
-    grammar = nltk.CFG.fromstring("""
-        S -> NP VP
-        NP -> DT AdjPhrase NN
-        AdjPhrase -> JJ | JJ AdjPhrase
-        VP -> VBD PP ConjVP | VBD ADVP
-        ConjVP -> CONJ VP
-        PP -> IN NP
-        ADVP -> RB
-        CONJ -> 'and'
-        DT -> 'The' | 'the'
-        JJ -> 'big' | 'black' | 'white'
-        NN -> 'dog' | 'cat'
-        VBD -> 'barked' | 'chased'
-        IN -> 'at'
-        RB -> 'away'
-    """)
-
-    parser = ChartParser(grammar)
-    parse_trees = list(parser.parse(tokens))
-
-    print(f"\nOriginal Sentence:\n\"{sentence}\"\n")
-    print("Parse Trees:")
-    if parse_trees:
-        for tree in parse_trees:
+    # Process each sentence with analysis
+    for i, sentence in enumerate(sentences):
+        print(f"\n{Fore.CYAN}=== Analysis for Sentence {i+1} ==={Style.RESET_ALL}")
+        print(f"Original: \"{sentence}\"")
+        
+        tokens = word_tokenize(sentence.lower())
+        tokens = [t for t in tokens if t not in ('.', ',', ';')]  # Clean punctuation [[2]]
+        
+        # Compare multiple grammars
+        for name, grammar in grammars.items():
+            cfg_parser = CFGParser(grammar)
+            trees = cfg_parser.parse_sentence(tokens)
+            
+            print(f"\n{Fore.YELLOW}Using {name.upper()} grammar:{Style.RESET_ALL}")
+            if not trees:
+                print(f"{Fore.RED}No valid parse trees found{Style.RESET_ALL}")
+                continue
+                
+            # Structural analysis
+            tree = trees[0]
+            depth = cfg_parser.calculate_tree_depth(tree)
+            constituents = cfg_parser.count_constituents(tree)
+            ambiguous = cfg_parser.analyze_ambiguity(trees)
+            
+            # Visualization with ASCII art [[1]]
+            print(f"\n{Fore.GREEN}Parse Tree (Depth: {depth}, Constituents: {constituents}):{Style.RESET_ALL}")
             tree.pretty_print()
-    else:
-        print("No valid parse trees found. Ensure the sentence matches the CFG grammar.")
+            
+            # Ambiguity analysis
+            if ambiguous:
+                print(f"{Fore.MAGENTA}Structural ambiguity detected!{Style.RESET_ALL}")
+                print(f"Number of possible parses: {len(trees)}")
+                
+            # Linguistic explanation
+            print(f"\n{Fore.BLUE}Linguistic Insights:{Style.RESET_ALL}")
+            print(f"- Main constituents: {', '.join([str(n.label()) for n in tree])}")
+            print(f"- Deepest branch: {max(tree.subtrees(), key=lambda t: t.height())}")
 
 if __name__ == "__main__":
     main()

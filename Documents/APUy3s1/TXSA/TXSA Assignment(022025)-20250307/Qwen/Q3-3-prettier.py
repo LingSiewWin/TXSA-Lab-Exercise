@@ -29,7 +29,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Advanced CFG Parse Tree Generator (4.0 Edition)'
     )
-    parser.add_argument('input_file', nargs='?', default='Data_2.txt',
+    parser.add_argument('input_file', nargs='?', default='Q3/Data_2.txt',
                        help='Input text file (default: Data_2.txt)')
     args = parser.parse_args()
 
@@ -46,34 +46,22 @@ def main():
 
     # Define multiple grammars for comparison [[5]][[7]]
     grammars = {
-        'basic': """
-            S -> NP VP
-            NP -> DT AdjPhrase N
-            AdjPhrase -> Adj | Adj AdjPhrase
-            VP -> V NP | V PP
-            PP -> P NP
-            DT -> 'The' | 'the'
-            Adj -> 'big' | 'black' | 'white'
-            N -> 'dog' | 'cat'
-            V -> 'barked' | 'chased'
-            P -> 'at'
-        """,
-        'extended': """
-            S -> NP VP | S Conj S
-            NP -> DT AdjPhrase N | NP PP
-            AdjPhrase -> Adj | Adj AdjPhrase
-            VP -> V NP | VP PP | V ADVP
-            PP -> P NP
-            ADVP -> Adv
-            Conj -> 'and'
-            DT -> 'The' | 'the'
-            Adj -> 'big' | 'black' | 'white'
-            N -> 'dog' | 'cat'
-            V -> 'barked' | 'chased'
-            P -> 'at'
-            Adv -> 'away'
-        """
-    }
+    'extended': """
+        S -> NP VP | S Conj S
+        NP -> DT AdjPhrase N | NP PP
+        AdjPhrase -> Adj | Adj AdjPhrase
+        VP -> V NP | VP PP | V ADVP | VP Conj VP  # Add VP coordination [[5]]
+        PP -> P NP
+        ADVP -> Adv
+        Conj -> 'and'
+        DT -> 'The' | 'the'
+        Adj -> 'big' | 'black' | 'white'
+        N -> 'dog' | 'cat'
+        V -> 'barked' | 'chased'
+        P -> 'at'
+        Adv -> 'away'
+    """
+}
 
     # Process each sentence with analysis
     for i, sentence in enumerate(sentences):
