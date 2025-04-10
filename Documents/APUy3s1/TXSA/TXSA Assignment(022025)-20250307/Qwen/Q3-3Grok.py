@@ -3,7 +3,7 @@ from nltk import CFG
 from nltk.parse import ChartParser
 
 # Read sentence from file
-with open('Q3/Data-2.txt', 'r') as file:
+with open('Q3/Data_2.txt', 'r') as file:
     sentence = file.read().strip()
 
 # Define grammar

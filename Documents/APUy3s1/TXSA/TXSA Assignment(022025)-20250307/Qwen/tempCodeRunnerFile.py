@@ -1,33 +1,51 @@
 import nltk
-from nltk import CFG
-from nltk.parse import ChartParser
+from nltk.tokenize import word_tokenize
+from textblob import TextBlob
+from nltk.tag import RegexpTagger
+from tabulate import tabulate
 
-# Read sentence from file
+# Download required NLTK data (run once)
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
 with open('Q3/Data_2.txt', 'r') as file:
     sentence = file.read().strip()
 
-# Define grammar
-grammar = CFG.fromstring("""
-    S -> NP VP CC VP | NP VP
-    NP -> DT JJ JJ NN | DT JJ NN | DT NN
-    VP -> VBD PP | VBD RB
-    PP -> IN NP
-    DT -> 'The' | 'the'
-    JJ -> 'big' | 'black' | 'white'
-    NN -> 'dog' | 'cat'
-    VBD -> 'barked' | 'chased'
-    IN -> 'at'
-    CC -> 'and'
-    RB -> 'away'
-""")
+# Tokenize once for consistency
+tokens = word_tokenize(sentence)  # This includes the period if present in the file
 
-# Tokenize for parsing (split since grammar uses exact words)
-tokens = sentence.split()
+# 1. NLTK POS Tagger
+nltk_tags = nltk.pos_tag(tokens)
 
-# Parse and display trees
-parser = ChartParser(grammar)
-print("Possible Parse Trees:")
-for i, tree in enumerate(parser.parse(tokens), 1):
-    print(f"\nTree {i}:")
-    print(tree)
-    tree.pretty_print()
+# 2. TextBlob POS Tagger (force tokenization to match NLTK)
+blob = TextBlob(sentence)
+textblob_tags = blob.tags
+
+# 3. Regular Expression Tagger with tailored patterns
+patterns = [
+    (r'^(The|the|a|A|an|An)$', 'DT'),  # Determiners
+    (r'^(big|black|white)$', 'JJ'),    # Common adjectives
+    (r'.*ed$', 'VBD'),                  # Past tense verbs
+    (r'^(and|or|but)$', 'CC'),         # Conjunctions
+    (r'^(at|in|on|to)$', 'IN'),        # Prepositions
+    (r'^(away)$', 'RB'),               # Specific adverb
+    (r'.*', 'NN')                      # Default to noun
+]
+regexp_tagger = RegexpTagger(patterns)
+regexp_tags = regexp_tagger.tag(tokens)
+
+# Prepare data for tabular output
+table_data = []
+for i, token in enumerate(tokens):
+    nltk_tag = nltk_tags[i][1]
+    textblob_tag = textblob_tags[i][1] if i < len(textblob_tags) else 'N/A'  # Handle length mismatch
+    regexp_tag = regexp_tags[i][1]
+    table_data.append([token, nltk_tag, textblob_tag, regexp_tag])
+
+# Display in a clean table
+headers = ["Word", "NLTK Tag", "TextBlob Tag", "Regexp Tag"]
+print("POS Tagging Results:")
+print(tabulate(table_data, headers=headers, tablefmt="grid"))
+
+
+
