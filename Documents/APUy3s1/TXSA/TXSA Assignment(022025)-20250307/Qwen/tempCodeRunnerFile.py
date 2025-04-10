@@ -1,52 +1,55 @@
+import sys
+import argparse
 import nltk
-from nltk import CFG
-from nltk.parse import ChartParser
 from nltk.tokenize import word_tokenize
+from nltk import ChartParser
 
-# Read sentence from file
-with open('Q3/Data_2.txt', 'r') as file:
-    sentence = file.read().strip()
+nltk.download('punkt', quiet=True)
 
-# Tokenize with NLTK (separates punctuation)
-tokens = word_tokenize(sentence)
-print(f"Tokens: {tokens}")  # Debug to see tokenized input
+def main():
+    parser = argparse.ArgumentParser(description='Parse Tree Generation')
+    parser.add_argument('input_file', nargs='?', default='Q3/Data_2.txt', help='Input text file (default: Data_2.txt)')
+    args = parser.parse_args()
 
-# Define grammar with comments on separate lines
-grammar = CFG.fromstring("""
-    # Sentence with optional coordination and punctuation
-    S -> NP VP CC VP PUNCT | NP VP PUNCT
-    # Noun phrase
-    NP -> DT JJ JJ NN | DT JJ NN | DT NN
-    # Verb phrase
-    VP -> VBD PP | VBD RB
-    # Prepositional phrase
-    PP -> IN NP
-    # Determiners
-    DT -> 'The' | 'the'
-    # Adjectives
-    JJ -> 'big' | 'black' | 'white'
-    # Nouns
-    NN -> 'dog' | 'cat'
-    # Past tense verbs
-    VBD -> 'barked' | 'chased'
-    # Prepositions
-    IN -> 'at'
-    # Conjunctions
-    CC -> 'and'
-    # Adverbs
-    RB -> 'away'
-    # Punctuation
-    PUNCT -> '.'
-""")
+    try:
+        with open(args.input_file, 'r') as file:
+            sentence = file.read().strip()
+            if not sentence:
+                print("Error: Input file is empty")
+                sys.exit(1)
+    except FileNotFoundError:
+        print(f"Error: File '{args.input_file}' not found")
+        sys.exit(1)
 
-# Parse and display trees
-try:
+    tokens = word_tokenize(sentence.replace('.', ''))  # Remove period for parsing
+
+    grammar = nltk.CFG.fromstring("""
+        S -> NP VP
+        NP -> DT AdjPhrase NN
+        AdjPhrase -> JJ | JJ AdjPhrase
+        VP -> VBD PP ConjVP | VBD ADVP
+        ConjVP -> CONJ VP
+        PP -> IN NP
+        ADVP -> RB
+        CONJ -> 'and'
+        DT -> 'The' | 'the'
+        JJ -> 'big' | 'black' | 'white'
+        NN -> 'dog' | 'cat'
+        VBD -> 'barked' | 'chased'
+        IN -> 'at'
+        RB -> 'away'
+    """)
+
     parser = ChartParser(grammar)
-    print("Possible Parse Trees:")
-    for i, tree in enumerate(parser.parse(tokens), 1):
-        print(f"\nTree {i}:")
-        print(tree)
-        tree.pretty_print()
-except ValueError as e:
-    print(f"Error: {e}")
-    print("The grammar doesn’t cover all tokens. Check the file content and grammar rules.")
+    parse_trees = list(parser.parse(tokens))
+
+    print(f"\nOriginal Sentence:\n\"{sentence}\"\n")
+    print("Parse Trees:")
+    if parse_trees:
+        for tree in parse_trees:
+            tree.pretty_print()
+    else:
+        print("No valid parse trees found. Ensure the sentence matches the CFG grammar.")
+
+if __name__ == "__main__":
+    main()

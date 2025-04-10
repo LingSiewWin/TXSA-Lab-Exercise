@@ -3,7 +3,6 @@ from nltk import CFG
 from nltk.parse import ChartParser
 from nltk.tokenize import word_tokenize
 
-# Read sentence from file
 with open('Q3/Data_2.txt', 'r') as file:
     sentence = file.read().strip()
 
@@ -50,3 +49,6 @@ try:
 except ValueError as e:
     print(f"Error: {e}")
     print("The grammar doesn’t cover all tokens. Check the file content and grammar rules.")
+    
+    
+    

@@ -12,7 +12,7 @@ nltk.download('averaged_perceptron_tagger_eng', quiet=True)
 
 def main():
     parser = argparse.ArgumentParser(description='POS Tagging Demonstration (4.0 Edition)')
-    parser.add_argument('input_file', nargs='?', default='Data_2.txt', 
+    parser.add_argument('input_file', nargs='?', default='Q3/Data_2.txt', 
                        help='Input text file (default: Data_2.txt). Format: One sentence per line.')
     args = parser.parse_args()
 
