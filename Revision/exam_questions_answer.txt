@@ -1,0 +1,207 @@
+Okay, here is a mock exam based on the topics you mentioned, structured according to your lecturer's likely format and drawing exclusively from the provided source materials. Remember that this is a practice tool, and your actual exam questions may vary.
+
+---
+
+**CT107-3-3 – TXSA Mock Exam**
+
+**Instructions:** Answer all four questions. Each question is worth 25 marks.
+
+---
+
+**Question 1 (25 Marks)**
+
+a) Explain the different levels of Natural Language Processing (NLP) and describe what each level involves, using a simple sentence example to illustrate the process. [10 marks]
+
+b) Describe the two main stages of Text Pre-processing. Detail the specific processes involved within the Text Segmentation stage. [15 marks]
+
+---
+
+**Answer 1:**
+
+a) Different Levels of NLP:
+
+Natural Language Processing (NLP) involves several levels of analysis to understand and process human language. These levels mirror linguistic distinctions between Syntax, Semantics, and Pragmatics.
+
+*   **Lexical Analysis:** This is the initial level, involving identifying and analysing the structure of words. It deals with the techniques and mechanisms for performing text analysis at the level of the word or tokens. For example, in the sentence "A dog is chasing a boy on the playground", lexical analysis would identify each word and potentially its part of speech.
+*   **Syntactic Analysis (Parsing):** This level involves analysing the words in a sentence for grammar and arranging them to show relationships among the words. It ensures the sentence follows grammatical rules. For example, the sentence "The school goes to boy" would be rejected by an English syntactic analyser because it violates grammatical structure. For "A dog is chasing a boy on the playground", syntactic analysis would identify noun phrases (Noun Phrase), verb phrases (Verb Phrase), and prepositional phrases (Prep Phrase), showing how they combine to form the sentence structure.
+*   **Semantic Analysis:** This level draws the exact meaning or the dictionary meaning from the text and checks for meaningfulness. A sentence like "hot ice-cream" might be disregarded by a semantic analyser because it is not meaningful despite being grammatically correct. For "A dog is chasing a boy on the playground", semantic analysis would move beyond structure to interpret the literal meaning, perhaps represented in predicate logic, such as identifying that a dog (d1) is chasing a boy (b1) on a playground (p1).
+*   **Pragmatic Analysis:** This is the highest level, understanding the true meaning behind what was said by considering context, the speaker's intentions, and using real-world knowledge. While not explicitly illustrated with the "dog" sentence in the source, it is stated that a person saying that sentence might be reminding another person to get the dog back, implying a meaning beyond the literal interpretation based on the situation.
+
+b) Stages of Text Pre-processing:
+
+Text pre-processing is the task of converting raw text into linguistically meaningful units like characters, words, and sentences. It can be divided into two main stages:
+
+1.  **Document Triage:** This is the process of converting a set of digital files into well-defined text documents. It involves taking raw, unstructured digital files (like PDFs or web pages) and transforming them into a clean, well-defined text corpus. Specific automatic processes in Document Triage include Character Encoding Identification, Language Identification, and Text Sectioning. The output is a corpus suitable for further analysis. An example is extracting text from scanned medical prescriptions using OCR, removing metadata, and converting it to a structured text file.
+
+2.  **Text Segmentation:** This is the process of converting the well-defined text corpus (output from Document Triage) into its component words and sentences. This stage is critical for downstream NLP tasks. The specific processes involved in Text Segmentation are:
+    *   **Sentence Segmentation:** Determining longer processing units by identifying sentence boundaries between words. It is also known as sentence boundary detection or disambiguation. For example, determining that "Take 2 tablets every 8 hours." is a single sentence. Sentence boundary punctuation typically includes periods, question marks, and exclamation points.
+    *   **Word Segmentation (Tokenization):** Breaking up the sequence of characters in a text by locating the points where one word ends and another begins. The identified words are referred to as tokens. For example, "Take 2 tablets every 8 hours." can be segmented into tokens like "Take", "2", "tablets", "every", "8", "hours.". This process might also involve removing certain characters like punctuation.
+    *   **Text Normalization:** A related step that involves merging different written forms of a token into a canonical normalized form. An example is normalizing "Mr.", "Mr", "mister", and "Mister" to a single form.
+
+---
+
+**Question 2 (25 Marks)**
+
+a) Define Tokenization and explain the difference between Tokenization in Artificial Languages versus Natural Languages. [10 marks]
+
+b) Discuss the main challenges faced during Tokenization in space-delimited languages, providing examples from the sources. [15 marks]
+
+---
+
+**Answer 2:**
+
+a) Definition of Tokenization and Language Differences:
+
+**Tokenization** is the task of chopping a document into pieces, called tokens. It involves breaking up a sequence of characters in a text by locating the boundaries where one word ends and another begins. A **token** is defined as a string of characters that has meaning.
+
+There is a key difference between tokenization in Artificial Languages and Natural Languages:
+
+*   **Artificial Languages:** For languages like programming languages (e.g., C, Java), tokenization is well-established and well-understood. This is because artificial languages can be strictly defined to eliminate lexical and structural ambiguities.
+*   **Natural Languages:** For languages like English, Spanish, or Chinese, we do not have the luxury of strict definition. In natural languages, the same character can serve many different purposes, and the syntax is not strictly defined. This makes tokenization significantly more challenging.
+
+b) Tokenization Challenges in Space-Delimited Languages:
+
+Even in space-delimited languages like English, where whitespace often indicates word boundaries, tokenization faces several challenges due to the ambiguous nature of writing systems and varied conventions.
+
+Specific challenges highlighted in the sources include:
+
+*   **Punctuation:** Punctuation marks pose a significant challenge as they can be used in multiple ways. A single character like a period (.) can mark abbreviations (e.g., "Corp." or "Sept."), serve as a decimal point (e.g., "$3.9"), or indicate the end of a sentence. Similarly, an apostrophe (') can mark possession (e.g., "analysts’") or show contractions (e.g., "doesn’t"). The tokenizer must be able to determine when punctuation is part of another token and when it is a separate token.
+*   **Number of Tokens:** Sometimes sequences that are semantically equivalent might be represented differently orthographically. For instance, "76 cents a share" has obvious spaces, suggesting four tokens, while "76-cents-a-share" with hyphens might seem like one token. However, they convey the same meaning, suggesting they should be treated consistently, but standard space-based splitting wouldn't achieve this.
+*   **Numbers:** The representation and semantics of numbers can vary based on genre and application. Numbers can appear with decimal points, commas (for thousands), dollar signs ($), etc., and tokenizing them consistently requires specific rules (e.g., "$3.9 to $4 million" vs. "3.9 to 4 million dollars" vs. "$3,900,000 to $4,000,000").
+*   **Multi-Part Words:** Some words separated by spaces are composed of multiple units, each with grammatical meaning, similar to agglutinating morphology found in languages like Turkish. While the example given is Turkish ("çöp kutularımızda olanlardan mıydı?"), the concept applies to how spaced words might require decomposition beyond simple splitting.
+*   **Multiword Expressions:** Spacing conventions don't always align with desired tokenization for NLP applications. Expressions like "in spite of" or "de facto" are treated as single semantic units equivalent to single words ("despite" or "in fact"), but are written as multiple space-separated words. Tokenization needs to recognize these multiword expressions.
+
+These examples show that even with spaces, tokenization in natural languages requires sophisticated rules to handle the complexities of writing systems and language usage.
+
+---
+
+**Question 3 (25 Marks)**
+
+a) Explain the concept of ambiguity in Natural Language Processing, describing both word-level and syntactic ambiguity with examples. [10 marks]
+
+b) Describe the Bigram language model. Using the concept of Maximum Likelihood Estimation (MLE) and drawing from the example calculation in the sources, explain how bigram probabilities are estimated from a corpus. [15 marks]
+
+---
+
+**Answer 3:**
+
+a) Ambiguity in NLP:
+
+**Ambiguity** is a significant challenge in Natural Language Processing. Natural language is designed for efficient human communication, which often involves omitting common-sense knowledge and retaining ambiguities that humans can typically resolve based on context. The sources state that ambiguity "is a killer" in NLP.
+
+Ambiguity can occur at various levels, including:
+
+*   **Word-level ambiguity:** This occurs when a single word can be interpreted in different ways.
+    *   **Ambiguous Part of Speech (POS):** A word can belong to more than one word class. For example, the word "design" can be used as a noun or a verb. The sources note that about 11% of word types and 40% of word tokens in corpora are ambiguous regarding part of speech.
+    *   **Ambiguous Sense:** A word can have multiple meanings. For example, the word "root" can refer to the underground part of a plant, a mathematical concept, or the origin of something.
+
+*   **Syntactic ambiguity:** This occurs when a sentence can be interpreted in more than one grammatical way, leading to multiple possible parse structures. This happens when the relationships between words are unclear. A classic example provided is "A man saw a boy with a telescope". This sentence is syntactically ambiguous because the prepositional phrase "with a telescope" could modify either "the boy" (the boy has the telescope) or "saw" (the seeing was done using a telescope). Drawing parse trees for this sentence would show two different structures representing these two interpretations.
+
+b) Bigram Language Model and Probability Estimation:
+
+A **Bigram model** is a probabilistic language model that considers the probability of a word occurring based *only* on the immediately preceding word. It is a type of N-gram language model, where N=2. The key idea is that the probability of a word `w_i` in a sequence depends solely on the word `w_{i-1}` that comes before it. Mathematically, this is represented as P(w_i | w_{i-1}). This is a simplification based on the **Markov Assumption**, which approximates the probability of a word given the entire preceding sequence P(w_i | w_1, ..., w_{i-1}) to P(w_i | w_{i-1}).
+
+To estimate the probabilities in a bigram model from a corpus, the **Maximum Likelihood Estimation (MLE)** method is used. The MLE probability of a word `w_i` given the previous word `w_{i-1}` is calculated by counting the occurrences of the bigram `(w_{i-1}, w_i)` in the training corpus and dividing it by the count of the preceding word `w_{i-1}`.
+
+The formula for MLE bigram probability is:
+**P(w_i | w_{i-1}) = count(w_{i-1}, w_i) / count(w_{i-1})**
+or equivalently
+**P(w_i | w_{i-1}) = c(w_{i-1}, w_i) / c(w_{i-1})**
+
+Where:
+*   `c(w_{i-1}, w_i)` is the count of the bigram (sequence of two words) `w_{i-1}` followed by `w_i` in the training corpus.
+*   `c(w_{i-1})` is the count of the word `w_{i-1}` occurring as a unigram in the training corpus.
+
+The sources provide a "Toy Corpus" example to illustrate this:
+Corpus:
+*   `<s> I am Sam </s>`
+*   `<s> Sam I am </s>`
+*   `<s> I do not like green eggs and ham </s>`
+
+To calculate bigram probabilities, you would first count the occurrences of each word and each two-word sequence (bigram) in this corpus. This counting process is essentially building a table of counts. For example, to calculate P(am | I), you would:
+1.  Count how many times "I" appears: `c(I)` = 2 (once in sentence 1, once in sentence 3).
+2.  Count how many times "I am" appears as a sequence: `c(I, am)` = 2 (once in sentence 1, once in sentence 2 - assuming `<s>` is the start marker). *Correction based on sentence 2: sentence 2 is `<s> Sam I am </s>`. So `c(I)` is 2, and `c(I, am)` is 2 (once in sentence 1, once in sentence 2). Let's re-read the toy corpus.* The corpus is: `<s> I am Sam </s>`, `<s> Sam I am </s>`, `<s> I do not like green eggs and ham </s>`.
+    *   `c(I)` = 3 (start of sent 1, after Sam in sent 2, start of sent 3)
+    *   `c(I, am)` = 2 (sent 1, sent 2)
+    *   `c(am)` = 2 (sent 1, sent 2)
+    *   `c(am, Sam)` = 1 (sent 1)
+    *   `c(Sam)` = 2 (sent 1, sent 2)
+    *   `c(Sam, </s>)` = 1 (sent 1)
+    *   `c(Sam, I)` = 1 (sent 2)
+    *   `c(<s>)` = 3
+    *   `c(<s>, I)` = 2 (sent 1, sent 3)
+    *   `c(<s>, Sam)` = 1 (sent 2)
+    *   And so on for other words.
+3.  Apply the MLE formula: P(am | I) = c(I, am) / c(I) = 2 / 3.
+
+The probability of an entire sentence in a bigram model is calculated by multiplying the conditional probabilities of each word given the previous word, using the chain rule with the Markov assumption. For example, the probability of the sentence `<s> I am Sam </s>` would be calculated as:
+P(<s> I am Sam </s>) = P(I | <s>) * P(am | I) * P(Sam | am) * P(</s> | Sam)
+Each of these individual bigram probabilities would be estimated using the MLE counts from the corpus as described above. For example, P(I | <s>) = c(<s>, I) / c(<s>) = 2 / 3.
+
+---
+
+**Question 4 (25 Marks)**
+
+a) Briefly explain how the "Bag of words" representation is used in Text Classification. [5 marks]
+
+b) In the context of Binary Classification evaluation, draw and label a 2x2 Confusion Matrix, explaining what each cell represents (TP, FP, FN, TN). [10 marks]
+
+c) Define Precision, Recall, and F1 Score. Explain when F1 score might be a better measure than accuracy and briefly describe the difference between Micro and Macro Averaging. [10 marks]
+
+---
+
+**Answer 4:**
+
+a) Bag of Words Representation in Text Classification:
+
+The **Bag of words** representation is a simple way to represent a document for tasks like text classification. It treats a document as just a "bag" of individual words, essentially ignoring grammar, word order, and syntax. In this representation, the presence and frequency of words are important, but the sequence is not. For document classification, the bag-of-words method helps the model focus on the key terms and their counts within a document to determine its category. Documents are transformed into feature vectors based on the words they contain and their frequencies or presence. For example, documents can be represented by a list of words and their respective counts.
+
+b) 2x2 Confusion Matrix for Binary Classification:
+
+In the evaluation of Binary Classification, a **2x2 Confusion Matrix** (or contingency table) is used to summarise the performance of a classifier. It compares the classifier's predictions against the actual, real-world class labels.
+
+Here is a drawing and labelling of a 2x2 Confusion Matrix based on the sources:
+
+```
+              Actual Class
+            -------------------
+Predicted     |  Correct    | Not Correct |
+Class         | (Positive)  | (Negative)  |
+-------------------------------------------
+Selected      | **TP**      | **FP**      |
+(Predicted    | (True       | (False      |
+Correct)      |  Positive)  |  Positive)  |
+-------------------------------------------
+Not Selected  | **FN**      | **TN**      |
+(Predicted    | (False      | (True       |
+Not Correct)  |  Negative)  |  Negative)  |
+-------------------------------------------
+```
+ (Labels adapted from source descriptions, e.g., 'Correct'/'Not Correct' vs 'selected'/'not selected', also mentioning 'Malicious'/'Benign' example).
+
+*   **TP (True Positive):** The count of instances that were **actually Correct** (Positive) and were **predicted as Correct** (Selected) by the classifier. The classifier correctly identified the positive cases.
+*   **FP (False Positive):** The count of instances that were **actually Not Correct** (Negative) but were **predicted as Correct** (Selected) by the classifier. The classifier incorrectly identified negative cases as positive (Type I error).
+*   **FN (False Negative):** The count of instances that were **actually Correct** (Positive) but were **predicted as Not Correct** (Not Selected) by the classifier. The classifier incorrectly identified positive cases as negative (Type II error).
+*   **TN (True Negative):** The count of instances that were **actually Not Correct** (Negative) and were **predicted as Not Correct** (Not Selected) by the classifier. The classifier correctly identified the negative cases.
+
+c) Precision, Recall, F1 Score, and Averaging:
+
+Based on the confusion matrix, several evaluation metrics can be calculated:
+
+*   **Precision:** The percentage of selected items that are actually correct. It answers: "When the classifier predicts positive, how often is it correct?".
+    *   Formula: **Precision = TP / (TP + FP)**
+*   **Recall:** The percentage of actual correct items that are selected by the classifier. It answers: "Out of all the actual positive cases, how many did the classifier find?".
+    *   Formula: **Recall = TP / (TP + FN)**
+*   **F1 Score:** A combined measure that assesses the trade-off between Precision and Recall. It is the **harmonic mean** of precision and recall. An F1 score ranges from 0 to 1, with 1 being perfect precision and recall.
+    *   The balanced F1 measure (with β = 1) is commonly used.
+    *   Formula: **F1 = 2PR / (P + R)** (where P is Precision, R is Recall).
+
+**When F1 is better than Accuracy:** Accuracy calculates the fraction of documents classified correctly overall (TP + TN) / Total. However, accuracy can be misleading when there is an **uneven class distribution**. For example, if 99% of documents belong to one class, a classifier that simply predicts that class for everything will achieve 99% accuracy, even if it fails completely on the rare class. In such cases, F1 score provides a better measure of the classifier's performance on the positive class by considering both Precision and Recall, which are more sensitive to identifying the positive cases.
+
+**Micro vs. Macro Averaging:** When evaluating performance across multiple classes (more than two), individual per-class measures (like Precision or Recall) can be combined using averaging.
+*   **Macro Averaging:** Compute the performance measure (e.g., Precision) for *each class independently*, and then calculate the average of these per-class scores.
+*   **Micro Averaging:** **Collect the decisions (TP, FP, FN, TN counts) for all classes into a single large confusion matrix**, and then compute the performance measure (e.g., Precision) from this combined table.
+
+The sources state that **micro averaged precision** is a **widely accepted measure** and that the micro averaged score is dominated by the score on common classes.
+
+---
